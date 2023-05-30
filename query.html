@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>AUTOMATED OBJECT DETECTION TAGGING AND QUERY HANDLING SYSTEM</title>
+    <style>
+        body {
+            background-color: white;
+            color: black;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        h1 {
+            background-color: lightblue;
+            font-weight: bold;
+            padding: 10px;
+            text-align: center;
+        }
+
+        .search-form {
+            width: 60%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .search-form input[type="text"] {
+            padding: 10px;
+            margin: 10px 0;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .search-form input[type="submit"] {
+            padding: 10px;
+            background-color: lightblue;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .search-form input[type="submit"]:hover {
+            background-color: darkblue;
+            color: white;
+        }
+
+        .search-results {
+            margin-top: 20px;
+            width: 100%;
+        }
+
+        .search-results img {
+            max-width: 100%;
+            height: auto;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>AUTOMATED OBJECT DETECTION TAGGING AND QUERY HANDLING SYSTEM</h1>
+    
+    <div class="search-form">
+        <form id="tagsForm">
+            <label for="tags">Enter tags (separated by comma):</label>
+            <input type="text" id="tags" name="tags">
+            <input type="submit" value="SEARCH BY TAGS">
+        </form>
+
+        <div class="search-results" id="searchResults">
+            <!-- Search results will be appended here -->
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('tagsForm').addEventListener('submit', function(event) {
+            event.preventDefault(); // to prevent the form from submitting normally
+            var tagsInput = document.getElementById('tags').value;
+            
+            // if no tags were entered, do nothing
+            if (!tagsInput) {
+                alert("Please enter at least one tag.");
+                return;
+            }
+
+            // convert tags from comma-separated string to array
+            var tags = tagsInput.split(',').map(tag => tag.trim());
+
+            fetch('https://rhnlx9ogtj.execute-api.us-east-1.amazonaws.com/pd/findbytag', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ tags: tags.map(tag => ({ tag, count: 1 })) }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                var searchResults = document.getElementById('searchResults');
+                searchResults.innerHTML = ''; // clear previous search results
+                data.links.forEach(function(link) { // here we handle 'links' instead of 'data'
+                    var img = document.createElement('img');
+                    img.src = link;
+                    searchResults.appendChild(img);
+                });
+            })
+            .catch(error => console.error('Error:', error));
+        });
+    </script>
+</body>
+
+</html>

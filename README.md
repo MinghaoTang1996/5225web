@@ -35,3 +35,7 @@ https://lucid.app/lucidchart/f4bcd10f-9f25-4f62-89f3-0867bc80d665/edit?viewport_
     - return JSON eample:{"Tags updated successfully"}
 
 5. Delete image
+    - API:  https://rhnlx9ogtj.execute-api.us-east-1.amazonaws.com/pd/deleteimage
+    - method: POST
+    - request JSON eample: {"url":"https://a3-image.s3.amazonaws.com/images/abcdabcd.jpg"}
+    - return JSON eample:{"Image successfully deleted"}

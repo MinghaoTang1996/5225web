@@ -89,20 +89,21 @@
             }
 
             // convert tags from comma-separated string to array
-            var tags = tagsInput.split(',').map(tag => tag.trim());
+            var tags = tagsInput.split(',').map(tag => ({ tag: tag.trim(), count: 1 }));
 
             fetch('https://rhnlx9ogtj.execute-api.us-east-1.amazonaws.com/pd/findbytag', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    // 'Authorization': `Bearer ${idToken}`
                 },
-                body: JSON.stringify({ tags: tags.map(tag => ({ tag, count: 1 })) }),
+                body: JSON.stringify({ tags: tags }),
             })
             .then(response => response.json())
             .then(data => {
                 var searchResults = document.getElementById('searchResults');
                 searchResults.innerHTML = ''; // clear previous search results
-                data.links.forEach(function(link) { // here we handle 'links' instead of 'data'
+                data.links.forEach(function(link) {
                     var img = document.createElement('img');
                     img.src = link;
                     searchResults.appendChild(img);

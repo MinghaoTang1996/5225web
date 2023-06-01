@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Find Images Based on Tags</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+
+<body>
+<h1>Find Images Based on Tags</h1>
+<form id="form">
+    <label for="image">Image File:</label><br>
+    <input type="file" id="image" name="image"><br>
+    <input type="submit" value="Find Images">
+</form>
+<div id="result"></div>
+<script>
+    $(document).ready(function () {
+        $("#form").on('submit', function (e) {
+            e.preventDefault();
+            var file = document.querySelector('#image').files[0];
+            var reader = new FileReader();
+            reader.onloadend = function() {
+                var base64Image = reader.result.split(",")[1];
+                var apiUrl = "https://rhnlx9ogtj.execute-api.us-east-1.amazonaws.com/pd/findbyimage";
+                $.ajax({
+                    url: apiUrl,
+                    type: 'POST',
+                    data: JSON.stringify({
+                        "image": base64Image
+                    }),
+                    contentType: "application/json",
+                    success: function (data) {
+                        var tags = data.tags;
+                        var links = data.links;
+                        // Display the tags and links
+                        var result = "<h2>Tags:</h2><ul>";
+                        for (var i = 0; i < tags.length; i++) {
+                            result += "<li>" + tags[i] + "</li>";
+                        }
+                        result += "</ul><h2>Images:</h2><ul>";
+                        for (var i = 0; i < links.length; i++) {
+                            result += "<li><a href='" + links[i] + "'>" + links[i] + "</a></li>";
+                        }
+                        result += "</ul>";
+                        $('#result').html(result);
+                    }
+                });
+            }
+            reader.readAsDataURL(file);
+        });
+    });
+</script>
+</body>
+
+</html>

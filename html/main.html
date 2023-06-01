@@ -1,0 +1,34 @@
+<html>
+    <head>
+        <title>a2-image-detection</title>
+    </head>
+    <body>
+        <h1>This is main</h1>
+        <h2>Upload image</h2>
+        <input type="file" id="myFile" name="fimename" accept="image/*" onchange="">
+
+        <script>
+            // 获取 URL 中的哈希参数
+            const hashParams = window.location.hash
+                .substring(1)
+                .split('&')
+                .reduce(function (initial, item) {
+                    if (item) {
+                        var parts = item.split('=');
+                        initial[parts[0]] = decodeURIComponent(parts[1]);
+                    }
+                    return initial;
+                }, {});
+
+            // 如果存在 id_token，则用户已登录
+            if (hashParams.id_token) {
+                // 处理登录成功的情况
+                console.log("User is logged in.");
+                console.log("ID token:", hashParams.id_token);
+            } else {
+                // 处理用户未登录的情况
+                console.log("User is not logged in.");
+            }
+        </script>
+    </body>
+</html>

@@ -58,7 +58,7 @@
     // Function to load the test JSON data with tag
     // Function to load the test JSON data with tag
     function loadTestDataWithTag() {
-    fetch("test_withtag.json")
+    fetch("./test_json/test_withtag.json")
         .then(response => response.json())
         .then(data => {
         // Create an array of tags with count = 1 for each link in the links array
@@ -70,16 +70,23 @@
 
 
     // Function to load the test JSON data without tag
+    // Function to load the test JSON data without tag
     function loadTestDataWithoutTag() {
-      fetch("test_notag.json")
-        .then(response => response.json())
-        .then(data => {
-          // Create an array of tags with count=1
-          let tagArray = data.links.map(link => ({tag: "person", count: 1}));
+    Promise.all([
+        fetch("test_json/test_notag.json").then(response => response.json()),
+        fetch("test_json/test_tag.json").then(response => response.json())
+    ])
+    .then(([data, tags]) => {
+        // Use the tags array from 'test_tag.json'
+        let tagArray = data.links.map(link => ({
+        tag: tags.tags.map(tag => tag.tag).join(', '),
+        count: data.links.length
+        }));
 
-          displayImages(data.links, tagArray);
-        });
+        displayImages(data.links, tagArray);
+    });
     }
+
 
     // Function to display the images and tags
     function displayImages(links, tags) {

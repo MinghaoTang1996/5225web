@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Image List</title>
+  <style>
+    /* Image container style */
+    .image-container {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      margin-bottom: 1em;
+    }
+
+    /* Image style */
+    .image-container img {
+      width: 150px;
+      height: 150px;
+    }
+
+    /* URL and tag style */
+    .image-details {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      margin-left: 1em;
+      width: 50%;
+    }
+
+    /* Button style */
+    .button {
+      background-color: #4CAF50;
+      border: none;
+      color: white;
+      padding: 10px;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      font-size: 14px;
+      margin-left: 1em;
+      cursor: pointer;
+    }
+
+    .button:hover {
+      background-color: #3e8e41;
+    }
+  </style>
+  <script>
+    // Function to edit the tag for an image
+    function editTag(imageUrl) {
+      // Implement your edit tag functionality here
+    }
+
+    // Function to delete an image
+    function deleteImage(imageUrl) {
+      // Implement your delete image functionality here
+    }
+
+    // Function to load the test JSON data with tag
+    // Function to load the test JSON data with tag
+    function loadTestDataWithTag() {
+    fetch("test_withtag.json")
+        .then(response => response.json())
+        .then(data => {
+        // Create an array of tags with count = 1 for each link in the links array
+        let tagArray = data.links.map(link => ({tag: data.tags[0], count: 1}));
+
+        displayImages(data.links, tagArray);
+        });
+    }
+
+
+    // Function to load the test JSON data without tag
+    function loadTestDataWithoutTag() {
+      fetch("test_notag.json")
+        .then(response => response.json())
+        .then(data => {
+          // Create an array of tags with count=1
+          let tagArray = data.links.map(link => ({tag: "person", count: 1}));
+
+          displayImages(data.links, tagArray);
+        });
+    }
+
+    // Function to display the images and tags
+    function displayImages(links, tags) {
+      // Clear the existing image list
+      document.getElementById('image-list').innerHTML = "";
+
+      // Build the image list for every image in the links array
+      links.forEach(function(url, index){
+        // Create the div to display the image
+        let div = document.createElement('div');
+        div.className = 'image-container';
+
+        // Add the image
+        let img = document.createElement('img');
+        img.src = url;
+        div.appendChild(img);
+
+        // Add the image URL and tag
+        let detailsDiv = document.createElement('div');
+        detailsDiv.className = 'image-details';
+        let urlP = document.createElement('p');
+        urlP.innerHTML = `<b>URL:</b> ${url}`;
+        detailsDiv.appendChild(urlP);
+        let tagP = document.createElement('p');
+        tagP.innerHTML = `<b>Tag:</b> ${tags[index].tag}`;
+        detailsDiv.appendChild(tagP);
+        div.appendChild(detailsDiv);
+
+        // Add the edit tag and delete image buttons
+        let buttonDiv = document.createElement('div');
+        let editButton = document.createElement('button');
+        editButton.className = 'button';
+        editButton.innerHTML = 'Edit Tag';
+        editButton.onclick = function() { editTag(url); };
+        let deleteButton = document.createElement('button');
+        deleteButton.className = 'button';
+        deleteButton.innerHTML = 'Delete Image';
+        deleteButton.onclick = function() { deleteImage(url); };
+        buttonDiv.appendChild(editButton);
+        buttonDiv.appendChild(deleteButton);
+        div.appendChild(buttonDiv);
+
+        // Add the image container div to the image list
+        document.getElementById('image-list').appendChild(div);
+      });
+    }
+  </script>
+</head>
+<body>
+  <h1>Image List</h1>
+
+  <!-- Test with tag button -->
+  <button class="button" onclick="loadTestDataWithTag()">Test with tag</button>
+
+  <!-- Test without tag button -->
+  <button class="button" onclick="loadTestDataWithoutTag()">Test without tag</button>
+
+  <div id="image-list"></div>
+</body>
+</html>

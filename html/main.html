@@ -19,13 +19,9 @@
 </div>
 
 <script>
-    const hashObject = window.location.hash.substring(1).split('&').reduce((result, item) => {
-        const parts = item.split('=');
-        result[parts[0]] = decodeURIComponent(parts[1]);
-        return result;
-    }, {});
-
-    const idToken = hashObject.id_token;
+    // Parse the URL fragment to get the ID token
+    const hashFragment = window.location.hash.substr(1);
+    const idToken = new URLSearchParams(hashFragment).get('id_token');
 
     async function convertImageToBase64(image) {
         return new Promise((resolve, reject) => {
@@ -65,6 +61,7 @@
         }
     }
 
+    // Add the event listener to the form
     document.querySelector('#form').addEventListener('submit', uploadImage);
 </script>
 </body>

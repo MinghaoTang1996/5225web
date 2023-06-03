@@ -48,11 +48,11 @@ https://lucid.app/lucidchart/f4bcd10f-9f25-4f62-89f3-0867bc80d665/edit?viewport_
     - request JSON eample: {"url":"https://a3-image.s3.amazonaws.com/images/abcdabcd.jpg"}
     - return JSON eample:{"Image successfully deleted"}
 ---
-NOTE: In the top 3 APIs, you need include user_id in request body. Following is an example to decode id_token and get user_id(sub).\
+NOTE: In the top 3 APIs, you need include user_id in request body. Following is an example to decode id_token and get user_id(**sub**).\
 <code>
 import jwt
 
-id_token = "id_token"
+id_token = "id_token"\
 payload = jwt.decode(id_token, options={"verify_signature": False})
 
 print(payload["sub"])

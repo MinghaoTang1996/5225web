@@ -44,7 +44,7 @@ https://lucid.app/lucidchart/f4bcd10f-9f25-4f62-89f3-0867bc80d665/edit?viewport_
 
 5. Delete image
     - API:  https://rhnlx9ogtj.execute-api.us-east-1.amazonaws.com/pd/deleteimage
-    - method: POST
+    - method: DELETE
     - request JSON eample: {"url":"https://a3-image.s3.amazonaws.com/images/abcdabcd.jpg"}
     - return JSON eample:{"Image successfully deleted"}
 ---
@@ -56,4 +56,7 @@ id_token = "id_token"
 payload = jwt.decode(id_token, options={"verify_signature": False})
 
 print(payload["sub"])
-</code>
+</code>\
+A helpful website: http://calebb.net/
+
+---

@@ -82,22 +82,24 @@
             event.preventDefault(); // to prevent the form from submitting normally
             var tagsInput = document.getElementById('tags').value;
             
+            var useridInput = "c60e1129-e6b5-4f43-803f-95287e91a210";
+    
             // if no tags were entered, do nothing
             if (!tagsInput) {
                 alert("Please enter at least one tag.");
                 return;
             }
-
+    
             // convert tags from comma-separated string to array
             var tags = tagsInput.split(',').map(tag => ({ tag: tag.trim(), count: 1 }));
-
+    
             fetch('https://rhnlx9ogtj.execute-api.us-east-1.amazonaws.com/pd/findbytag', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                     // 'Authorization': `Bearer ${idToken}`
                 },
-                body: JSON.stringify({ tags: tags }),
+                body: JSON.stringify({ tags: tags, user_id: useridInput }),
             })
             .then(response => response.json())
             .then(data => {
@@ -112,6 +114,7 @@
             .catch(error => console.error('Error:', error));
         });
     </script>
+    
 </body>
 
 

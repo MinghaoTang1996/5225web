@@ -10,7 +10,6 @@
 <h1>Welcome!</h1>
 <a href="query.html">Go to query page</a> <br>
 <a href="getAllImage.html">Get all images</a> <br>
-<a href="https://a2-image-detection.auth.us-east-1.amazoncognito.com/login?client_id=7m0s74mj446ufeai4177svhg85&response_type=token&scope=email+openid&redirect_uri=http%3A%2F%2Flocalhost%3A5000%2Fhtml%2Fmain.html">Login</a>
 <div class="upload">
     <h2>Upload Image</h2>
     <form id="form">
@@ -25,6 +24,7 @@
     // Parse the URL fragment to get the ID token
     const hashFragment = window.location.hash.substr(1);
     const idToken = new URLSearchParams(hashFragment).get('id_token');
+    localStorage.setItem('idToken', idToken);
 
     async function convertImageToBase64(image) {
         return new Promise((resolve, reject) => {
@@ -66,6 +66,7 @@
 
     // Add the event listener to the form
     document.querySelector('#form').addEventListener('submit', uploadImage);
+
 </script>
 </body>
 

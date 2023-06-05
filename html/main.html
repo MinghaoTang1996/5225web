@@ -4,6 +4,7 @@
 <head>
     <title>Main Page</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    
 </head>
 
 <body>
@@ -20,7 +21,7 @@
     <div id="result"></div>
 </div>
 
-<script>
+<!-- <script>
     // Parse the URL fragment to get the ID token
     const hashFragment = window.location.hash.substr(1);
     const idToken = new URLSearchParams(hashFragment).get('id_token');
@@ -42,7 +43,7 @@
         const payload = {
             name: image.name,
             file: base64Str,
-            user_id:"06ef06c8-6500-45bb-af0c-8ddf8fc7fbc5"
+            user_id:"b09eef4e-f8d1-4d52-b0d3-e04b56105190"
         };
         try {
             const response = await fetch("https://rhnlx9ogtj.execute-api.us-east-1.amazonaws.com/pd/image", {
@@ -68,7 +69,8 @@
     // Add the event listener to the form
     document.querySelector('#form').addEventListener('submit', uploadImage);
 
-</script>
+</script> -->
+<script src="javascript/js.js"></script>
 </body>
 
 </html>

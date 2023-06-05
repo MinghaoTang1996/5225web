@@ -4,6 +4,8 @@
 <head>
     <title>Find Images Based on Tags</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    
 </head>
 
 <body>
@@ -52,5 +54,209 @@
     });
 </script>
 </body>
+
+<!-- Image list part by Huang Image list part by Huang  Image list part by Huang Image list part by Huang -->
+<!-- Image list part by Huang  Image list part by Huang Image list part by Huang  Image list part by Huang Image list part by Huang -->
+<body>
+    <!-- image list style and script by huang -->
+    <!-- image list style and script by huang -->
+    <style>
+        /* Image container style */
+        .image-container {
+          display: flex;
+          flex-direction: row;
+          justify-content: space-between;
+          margin-bottom: 1em;
+        }
+    
+        /* Image style */
+        .image-container img {
+          width: 150px;
+          height: 150px;
+        }
+    
+        /* URL and tag style */
+        .image-details {
+          display: flex;
+          flex-direction: column;
+          justify-content: space-between;
+          margin-left: 1em;
+          width: 50%;
+        }
+    
+        /* Button style */
+        .button {
+          background-color: #4CAF50;
+          border: none;
+          color: white;
+          padding: 10px;
+          text-align: center;
+          text-decoration: none;
+          display: inline-block;
+          font-size: 14px;
+          margin-left: 1em;
+          cursor: pointer;
+        }
+    
+        .button:hover {
+          background-color: #3e8e41;
+        }
+      </style>
+
+      
+      <!-- image list style and script by huang -->
+      <script>
+        
+    
+        // Function to load the test JSON data with tag
+        function loadTestDataWithTag() {
+        fetch("./test_json/test_withtag.json")
+            .then(response => response.json())
+            .then(data => {
+            // Create an array of tags with count = 1 for each link in the links array
+            let tagArray = data.links.map(link => ({tag: data.tags[0], count: 1}));
+    
+            displayImages(data.links, tagArray);
+            });
+        }
+    
+        // Function to load the test JSON data without tag
+        function loadTestDataWithoutTag() {
+        Promise.all([
+            fetch("test_json/test_notag.json").then(response => response.json()),
+            fetch("test_json/test_tag.json").then(response => response.json())
+        ])
+        .then(([data, tags]) => {
+            // Use the tags array from 'test_tag.json'
+            let tagArray = data.links.map(link => ({
+            tag: tags.tags.map(tag => tag.tag).join(', '),
+            count: data.links.length
+            }));
+    
+            displayImages(data.links, tagArray);
+        });
+        }
+    
+    
+    
+    
+        // Function to edit the tag for an image
+        // Function to display images and tags
+        function displayImages(links, tagArray) {
+          // Get the image list element
+          const imageList = document.getElementById("image-list");
+    
+          // Clear the image list
+          imageList.innerHTML = "";
+    
+          // Loop through the links and create an image element for each link
+          links.forEach((link, index) => {
+            const imageContainer = document.createElement("div");
+            imageContainer.classList.add("image-container");
+    
+            const imageElement = document.createElement("img");
+            imageElement.src = link;
+            imageElement.classList.add("image");
+    
+            const urlElement = document.createElement("div");  // new line
+            urlElement.textContent = `URL: ${link}`;  // new line
+    
+            const tagElement = document.createElement("div");
+            tagElement.classList.add("tag");
+            tagElement.textContent = `Tags: ${tagArray[index].tag}`;
+    
+            const editButton = document.createElement("button");
+            editButton.classList.add("button");
+            editButton.textContent = "Edit Tag";
+            editButton.dataset.index = index;
+    
+            const deleteButton = document.createElement("button");
+            deleteButton.classList.add("button");
+            deleteButton.textContent = "Delete Image";
+            deleteButton.dataset.index = index;
+    
+            imageContainer.appendChild(imageElement);
+            imageContainer.appendChild(urlElement);  // new line
+            imageContainer.appendChild(tagElement);
+            imageContainer.appendChild(editButton);
+            imageContainer.appendChild(deleteButton);
+    
+            imageList.appendChild(imageContainer);
+    
+            // Add event listener to the "Edit Tag" button
+            editButton.addEventListener("click", () => {
+              const tagString = prompt("Enter tags (comma-separated):", tagArray[index].tag);
+              const tags = tagString.split(",").map(tag => tag.trim());
+    
+              // Determine whether to add or remove tags
+              let type = 0; // 0 for remove
+              if (tags.length > tagArray[index].tag.split(",").length) {
+                type = 1; // 1 for add
+              }
+    
+              // Construct the JSON object for the request
+              const jsonObject = {
+                url: links[index],
+                type: type,
+                tags: tags.map(tag => ({tag: tag, count: tagArray.length}))
+              };
+    
+              console.log(jsonObject);
+    
+              // Send the JSON object to the API endpoint
+              fetch("https://rhnlx9ogtj.execute-api.us-east-1.amazonaws.com/pd/munualchangetag", {
+                method: "POST",
+                body: JSON.stringify(jsonObject)
+              })
+              .then(response => console.log(response))
+    
+              // Update the tag element text content
+              tagArray[index].tag = tags.join(", ");
+              tagElement.textContent = `Tags: ${tagArray[index].tag}`;
+            });
+    
+    
+            // Add event listener to the "Delete Image" button
+            deleteButton.addEventListener("click", () => {
+            // Construct the JSON object for the request
+            const jsonObject = {
+              url: links[index]
+            };
+    
+            console.log(jsonObject);
+    
+            // Send the JSON object to the API endpoint
+            fetch("https://rhnlx9ogtj.execute-api.us-east-1.amazonaws.com/pd/deleteimage", {
+              method: "POST",
+              body: JSON.stringify(jsonObject)
+            })
+            .then(response => console.log(response))
+    
+            // Remove the link and tag from their arrays
+            links.splice(index, 1);
+            tagArray.splice(index, 1);
+    
+            // Clear the image list and redraw it with the new arrays
+            displayImages(links, tagArray);
+          });
+    
+    
+    
+          });
+        }
+
+      </script>
+    <h1>Image List</h1>
+  
+    <!-- Test with tag button -->
+    <button class="button" onclick="loadTestDataWithTag()">Test with tag</button>
+  
+    <!-- Test without tag button -->
+    <button class="button" onclick="loadTestDataWithoutTag()">Test without tag</button>
+  
+    <div id="image-list"></div>
+</body>
+
+
 
 </html>

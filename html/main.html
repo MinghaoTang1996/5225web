@@ -41,7 +41,8 @@
         const base64Str = await convertImageToBase64(image);
         const payload = {
             name: image.name,
-            file: base64Str
+            file: base64Str,
+            user_id:"06ef06c8-6500-45bb-af0c-8ddf8fc7fbc5"
         };
         try {
             const response = await fetch("https://rhnlx9ogtj.execute-api.us-east-1.amazonaws.com/pd/image", {

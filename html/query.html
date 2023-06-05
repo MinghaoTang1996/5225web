@@ -2,6 +2,7 @@
 <html>
 
 <head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <title>AUTOMATED OBJECT DETECTION TAGGING AND QUERY HANDLING SYSTEM</title>
     <style>
         body {
@@ -83,47 +84,18 @@
         <!-- Search results will be appended here -->
     </div>
 
-    <script>
-        var idToken = localStorage.getItem('idToken');
-        document.getElementById('tagsForm').addEventListener('submit', function(event) {
-            event.preventDefault(); // to prevent the form from submitting normally
-            var tagsInput = document.getElementById('tags').value;
-            
-            // 直接将你得到的 userID 粘贴在这里
-            var useridInput = "b09eef4e-f8d1-4d52-b0d3-e04b56105190";
+</body>
+
+<body>
+    <h1>Find Images Based on Tags</h1>
+    <form id="form">
+        <label for="image">Image File:</label><br>
+        <input type="file" id="image" name="image"><br>
+        <input type="submit" value="Find Images">
+    </form>
+    <div id="result"></div>
     
-            // if no tags were entered, do nothing
-            if (!tagsInput) {
-                alert("Please enter at least one tag.");
-                return;
-            }
-    
-            // convert tags from comma-separated string to array
-            var tags = tagsInput.split(',').map(tag => ({ tag: tag.trim(), count: 1 }));
-    
-            fetch('https://rhnlx9ogtj.execute-api.us-east-1.amazonaws.com/pd/findbytag', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${idToken}`
-                },
-                body: JSON.stringify({ tags: tags, user_id: useridInput }),  // 在发送的数据中添加 user_id 字段
-            })
-            .then(response => response.json())
-            .then(data => {
-                var searchResults = document.getElementById('searchResults');
-                searchResults.innerHTML = ''; // clear previous search results
-                data.links.forEach(function(link) {
-                    var img = document.createElement('img');
-                    img.src = link;
-                    searchResults.appendChild(img);
-                });
-            })
-            .catch(error => console.error('Error:', error));
-        });
-    </script>
-    
-    
+<script src="javascript/js.js"></script>
 </body>
 
 

@@ -14,14 +14,14 @@
 ### upload image
 
 - API:  `https://rhnlx9ogtj.execute-api.us-east-1.amazonaws.com/pd/image`
-- method: POST
+- method: **POST**
 - request JSON eample: `{"name":"image.jpg","file":"/9j/4AAQSkZJRgABAQEASABIAAD/2w....","user_id": "c60e1129-e6b5-4f43-803f-95287e91a210"}`
 - return JSON eample: `{"name": "images/acdd49a6fe1011eda7a9b2705f222ada.jpg"}`
 
 ### find by tag
 
 - API:  `https://rhnlx9ogtj.execute-api.us-east-1.amazonaws.com/pd/findbytag`
-- method: POST
+- method: **POST**
 - request JSON eample:
   ```
   {
@@ -47,7 +47,7 @@
 ### find by image
 
 - API:  `https://rhnlx9ogtj.execute-api.us-east-1.amazonaws.com/pd/findbyimage`
-- method: POST
+- method: **POST**
 - request JSON eample:
   ```
   {
@@ -71,7 +71,7 @@
 ### Manual change tags
 
 - API:  `https://rhnlx9ogtj.execute-api.us-east-1.amazonaws.com/pd/munualchangetag`
-- method: POST
+- method: **POST**
 - equest JSON eample:
   ```
   {
@@ -95,10 +95,15 @@
 ### Delete image
 
 - API:  `https://rhnlx9ogtj.execute-api.us-east-1.amazonaws.com/pd/deleteimage`
-- method: DELETE
-- request JSON eample: `{"url":"https://a3-image.s3.amazonaws.com/images/abcdabcd.jpg"}`
+- method: **DELETE**
+- request JSON eample:`{"url":"https://a3-image.s3.amazonaws.com/images/abcdabcd.jpg"}`
 - return JSON eample: `{"Image successfully deleted"}`
 
+### Show All Images
+- API:  `https://rhnlx9ogtj.execute-api.us-east-1.amazonaws.com/pd/showallimages`
+- method: **POST**
+- request JSON eample: `{"user_id": "c60e1129-e6b5-4f43-803f-95287e91a210"}`
+- return JSON eample: `{"statusCode": 200, "body": "{\"links\": [\"https://a3-image.s3.amazonaws.com/images/4c039c18039511ee9d29fee879db0a70.jpg?AWSAccessKeyId=ASIA2LDBP3ISZM5...\", \"https://a3-im...\"]}"}`
 ---
 
 NOTE: In the top 3 APIs, you need include user_id in request body. Following is an example to decode id_token and get user_id(**sub**).
@@ -112,7 +117,7 @@ payload = jwt.decode(id_token, options={"verify_signature": False})
 print(payload["sub"])
 ```
 
-A helpful website to decode json request/response:
+A helpful website to decode id_token:
 
 [http://calebb.net/](http://calebb.net/)
 

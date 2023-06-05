@@ -62,7 +62,7 @@ function decodeIdToken(token) {
 
 // Show all images
 window.onload = function() {
-    var useridInput = "b09eef4e-f8d1-4d52-b0d3-e04b56105190";
+    var useridInput = user_id;
     fetch('https://rhnlx9ogtj.execute-api.us-east-1.amazonaws.com/pd/showallimages', {
         method: 'POST',
         headers: {
@@ -122,37 +122,34 @@ document.getElementById('tagsForm').addEventListener('submit', function(event) {
 });
 
 // find image by image
-document.getElementById('form').addEventListener('submit', function(event) {
-    event.preventDefault(); 
-    const file = document.getElementById('image').files[0];
-
-    reader.onloadend = async function () {
-        const base64Image = await convertImageToBase64(file);
-        const apiUrl = "https://rhnlx9ogtj.execute-api.us-east-1.amazonaws.com/pd/findbyimage";
-        const payload = JSON.stringify({
-            "image": base64Image,
-            "user_id": user_id
-        });
-
-        fetch(apiUrl, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${idToken}`
-            },
-            body: payload
-        })
+async function findimageByimage(event) {
+    event.preventDefault();
+    const image = document.querySelector('#findByImage_image').files[0];
+    const base64Str = await convertImageToBase64(image);
+    const payload = JSON.stringify({
+        "image": base64Str,
+        "user_id": user_id
+    });
+    const apiUrl = "https://rhnlx9ogtj.execute-api.us-east-1.amazonaws.com/pd/findbyimage";
+    fetch(apiUrl, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${idToken}`
+        },
+        body: payload
+    })
         .then(response => response.json())
         .then(data => {
             const tags = data.tags;
             const links = data.links;
             let result = "<h2>Tags:</h2><ul>";
-            
+
             for (let i = 0; i < tags.length; i++) {
                 result += "<li>" + tags[i] + "</li>";
             }
             result += "</ul><h2>Images:</h2><ul>";
-            
+
             for (let i = 0; i < links.length; i++) {
                 result += "<li><a href='" + links[i] + "'>" + links[i] + "</a></li>";
             }
@@ -161,12 +158,12 @@ document.getElementById('form').addEventListener('submit', function(event) {
             console.log(result);
         })
         .catch(error => console.error('Error:', error));
-    }
-    
-    reader.readAsDataURL(file);
-});
+
+}
 
 
 
 // Add the event listener to the form
 document.querySelector('#form').addEventListener('submit', uploadImage);
+document.querySelector('#image_form').addEventListener('submit', findimageByimage);
+

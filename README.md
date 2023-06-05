@@ -15,14 +15,14 @@
 
 - API:  `https://rhnlx9ogtj.execute-api.us-east-1.amazonaws.com/pd/image`
 - method: **POST**
-- request JSON eample: `{"name":"image.jpg","file":"/9j/4AAQSkZJRgABAQEASABIAAD/2w....","user_id": "c60e1129-e6b5-4f43-803f-95287e91a210"}`
-- return JSON eample: `{"name": "images/acdd49a6fe1011eda7a9b2705f222ada.jpg"}`
+- request JSON example: `{"name":"image.jpg","file":"/9j/4AAQSkZJRgABAQEASABIAAD/2w....","user_id": "c60e1129-e6b5-4f43-803f-95287e91a210"}`
+- return JSON example: `{"name": "images/acdd49a6fe1011eda7a9b2705f222ada.jpg"}`
 
 ### find by tag
 
 - API:  `https://rhnlx9ogtj.execute-api.us-east-1.amazonaws.com/pd/findbytag`
 - method: **POST**
-- request JSON eample:
+- request JSON example:
   ```
   {
       "tags": [
@@ -34,7 +34,7 @@
       "user_id": "c60e1129-e6b5-4f43-803f-95287e91a210"
   }
   ```
-- return JSON eample:
+- return JSON example:
   ```
   {
       "links": [
@@ -48,14 +48,14 @@
 
 - API:  `https://rhnlx9ogtj.execute-api.us-east-1.amazonaws.com/pd/findbyimage`
 - method: **POST**
-- request JSON eample:
+- request JSON example:
   ```
   {
       "image": "/9j/4AAQSkZJRgABAQEASABIAAD/2w....",
       "user_id": "c60e1129-e6b5-4f43-803f-95287e91a210"
   }
   ```
-- return JSON eample:
+- return JSON example:
   ```
   {
       "links": [
@@ -72,7 +72,7 @@
 
 - API:  `https://rhnlx9ogtj.execute-api.us-east-1.amazonaws.com/pd/munualchangetag`
 - method: **POST**
-- equest JSON eample:
+- request JSON example:
   ```
   {
       "url": "https://a3-image.s3.amazonaws.com/images/acdd49a6fe1011eda7a9b2705f222ada.jpg",
@@ -89,7 +89,7 @@
       ]
   }
   ```
-- return JSON eample: `{"Tags updated successfully"}`
+- return JSON example: `{"Tags updated successfully"}`
 
 
 ### Delete image
@@ -97,13 +97,13 @@
 - API:  `https://rhnlx9ogtj.execute-api.us-east-1.amazonaws.com/pd/deleteimage`
 - method: **DELETE**
 - request JSON eample:`{"url":"https://a3-image.s3.amazonaws.com/images/abcdabcd.jpg"}`
-- return JSON eample: `{"Image successfully deleted"}`
+- return JSON example: `{"Image successfully deleted"}`
 
 ### Show All Images
 - API:  `https://rhnlx9ogtj.execute-api.us-east-1.amazonaws.com/pd/showallimages`
 - method: **POST**
-- request JSON eample: `{"user_id": "c60e1129-e6b5-4f43-803f-95287e91a210"}`
-- return JSON eample: `{"statusCode": 200, "body": "{\"links\": [\"https://a3-image.s3.amazonaws.com/images/4c039c18039511ee9d29fee879db0a70.jpg?AWSAccessKeyId=ASIA2LDBP3ISZM5...\", \"https://a3-im...\"]}"}`
+- request JSON example: `{"user_id": "c60e1129-e6b5-4f43-803f-95287e91a210"}`
+- return JSON example: `{"links": ["https://a3-image.s3.amazonaws.com/images/4c039c18039511ee9d29fee879db0a70.jpg?AWSAccessKeyId=ASIA2LD...", "https://a3-im..."]}`
 ---
 
 NOTE: In the top 3 APIs, you need include user_id in request body. Following is an example to decode id_token and get user_id(**sub**).

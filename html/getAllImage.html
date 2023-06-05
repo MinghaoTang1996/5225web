@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Show All Images</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .image-container img {
+            max-width: 100%;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>All Images</h1>
+    <div class="image-container" id="imageContainer">
+        <!-- Images will be appended here -->
+    </div>
+
+    <script>
+        window.onload = function() {
+            var useridInput = "b09eef4e-f8d1-4d52-b0d3-e04b56105190";
+            fetch('https://rhnlx9ogtj.execute-api.us-east-1.amazonaws.com/pd/showallimages', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    // 'Authorization': `Bearer ${idToken}`
+                },
+                body: JSON.stringify({ user_id: useridInput }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                var imageContainer = document.getElementById('imageContainer');
+                data.links.forEach(function(link) {
+                    var img = document.createElement('img');
+                    img.src = link;
+                    imageContainer.appendChild(img);
+                });
+            })
+            .catch(error => console.error('Error:', error));
+        };
+    </script>
+</body>
+
+</html>

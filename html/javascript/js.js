@@ -413,53 +413,91 @@ function loadTestDataWithTag() {
 
       imageList.appendChild(imageContainer);
 
-      // Add event listener to the "Edit Tag" button
       editButton.addEventListener("click", () => {
         const url = image.url;
         const tagArray = image.tags;
-      
+        
         const tagString = prompt("Enter tags (comma-separated):", tagArray.map(tag => tag.tag).join(","));
         const tags = tagString.split(",").map(tag => tag.trim());
       
-        // Determine whether to add or remove tags
+        // Determine which tags to remove and which tags to add
+        const removeTags = tagArray.filter(tag => !tags.includes(tag.tag));
+        const addTags = tags.filter(tag => !tagArray.map(tag => tag.tag).includes(tag));
+      
+        // Determine the operation type for the API request
         let type = 0; // 0 for remove
-        if (tags.length > tagArray.length) {
+        if (addTags.length > 0) {
           type = 1; // 1 for add
         }
       
-        // Construct the JSON object for the request
+        // Construct the JSON objects for the requests
+        if (removeTags.length > 0) {
+          const jsonObject1 = JSON.stringify({
+            "url": url.split('?')[0],
+            "type": 0,
+            "tags": removeTags.map(tag => ({tag: tag.tag, count: tag.count}))
+          });
       
-        const jsonObject = JSON.stringify({
-          "url": url.split('?')[0],
-          "type": type,
-          "tags": tags.map(tag => ({tag: tag, count: tagArray.length}))
-        });
+          console.log(jsonObject1);
       
-        console.log(jsonObject);
+          // Send the first JSON object for tag removal to the API endpoint
+          const apiUrl1 = "https://rhnlx9ogtj.execute-api.us-east-1.amazonaws.com/pd/manualchangetag";
+          fetch(apiUrl1, {
+              method: 'POST',
+              headers: {
+                  'Content-Type': 'application/json',
+                  'Authorization': `Bearer ${idToken}`
+              },
+              body: jsonObject1
+          })
+          .then(response => response.json())
+          .then(data => {
+            console.log(data);
+            const jsonString = JSON.stringify(data, null, 2);
+            if (!jsonString.includes("Tags updated successfully")) {
+              console.error('Failed to update image tags:', data);
+            }
+          })
+          .catch(error => console.error('Error:', error));
+        }
       
-        // Send the JSON object to the API endpoint
-        const apiUrl = "https://rhnlx9ogtj.execute-api.us-east-1.amazonaws.com/pd/manualchangetag";
-        fetch(apiUrl, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${idToken}`
-            },
-            body: jsonObject
-        })
-        .then(response => response.json())
-        .then(data => {
-          console.log(data);
-          const jsonString = JSON.stringify(data, null, 2);
+        if (addTags.length > 0) {
+          const jsonObject2 = JSON.stringify({
+            "url": url.split('?')[0],
+            "type": 1,
+            "tags": addTags.map(tag => ({tag: tag, count: tagArray.length}))
+          });
+      
+          console.log(jsonObject2);
+      
+          // Send the second JSON object for tag additions to the API endpoint
+          const apiUrl2 = "https://rhnlx9ogtj.execute-api.us-east-1.amazonaws.com/pd/manualchangetag";
+          fetch(apiUrl2, {
+              method: 'POST',
+              headers: {
+                  'Content-Type': 'application/json',
+                  'Authorization': `Bearer ${idToken}`
+              },
+              body: jsonObject2
+          })
+          .then(response => response.json())
+          .then(data => {
+            console.log(data);
+            const jsonString = JSON.stringify(data, null, 2);
             if (jsonString.includes("Tags updated successfully")) {
-              //images = images.filter(image => image.url !== url);
+              // Update the image object with the new tags
+              image.tags = [...tagArray.filter(tag => tags.includes(tag.tag)), ...addTags.map(tag => ({tag: tag, count: tagArray.length}))];
+      
+              // Redraw the images
               displayImages(images);
             } else {
-                console.error('Failed to update image:', data);
+              console.error('Failed to update image tags:', data);
             }
-        })
-        .catch(error => console.error('Error:', error));
+          })
+          .catch(error => console.error('Error:', error));
+        }
       });
+      
       
 
 

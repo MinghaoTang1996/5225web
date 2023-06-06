@@ -60,6 +60,7 @@ function decodeIdToken(token) {
     return JSON.parse(jsonPayload);
 }
 
+// Show all images
 window.onload = function() {
     var useridInput = user_id;
     fetch('https://rhnlx9ogtj.execute-api.us-east-1.amazonaws.com/pd/showallimages', {
@@ -108,6 +109,7 @@ document.getElementById('addTag').addEventListener('click', function(event) {
     tagInputs.appendChild(newTagInput);
   });
   
+  // remove tag input
   document.getElementById('tagsForm').addEventListener('submit', function(event) {
     event.preventDefault();
   
@@ -156,7 +158,7 @@ document.getElementById('addTag').addEventListener('click', function(event) {
       .catch(error => console.error('Error:', error));
   });
   
-  
+  // increase and decrease count
   document.addEventListener('click', function(event) {
     if (event.target.matches('.increaseCount')) {
       var countSpan = event.target.parentNode.querySelector('.count');

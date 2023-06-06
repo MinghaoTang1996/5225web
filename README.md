@@ -71,7 +71,7 @@
 
 ### Manual change tags
 
-- API:  `https://rhnlx9ogtj.execute-api.us-east-1.amazonaws.com/pd/munualchangetag`
+- API:  `https://rhnlx9ogtj.execute-api.us-east-1.amazonaws.com/pd/manualchangetag`
 - method: **POST**
 - request JSON example:
   ```

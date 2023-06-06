@@ -213,7 +213,7 @@ async function findimageByimage(event) {
                 result += "<li><a href='" + links[i] + "'>" + links[i] + "</a></li>";
             }
             result += "</ul>";
-            document.getElementById('result').innerHTML = result;
+            document.getElementById('image_result').innerHTML = result;
             console.log(result);
         })
         .catch(error => console.error('Error:', error));

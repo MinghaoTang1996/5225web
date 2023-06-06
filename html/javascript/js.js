@@ -93,42 +93,89 @@ window.onload = function() {
 
 
 // find image by tags
-document.getElementById('tagsForm').addEventListener('submit', function(event) {
-    event.preventDefault(); // to prevent the form from submitting normally
-    var tagsInput = document.getElementById('tags').value;
-    
+document.getElementById('addTag').addEventListener('click', function(event) {
+    event.preventDefault();
+  
+    var tagInputs = document.getElementById('tagInputs');
+    var newTagInput = document.createElement('div');
+    newTagInput.className = 'tagInput';
+    newTagInput.innerHTML = `
+      <input type="text" class="tag" placeholder="Enter tag">
+      <button class="decreaseCount" disabled>-</button>
+      <span class="count">1</span>
+      <button class="increaseCount">+</button>
+    `;
+    tagInputs.appendChild(newTagInput);
+  });
+  
+  document.getElementById('tagsForm').addEventListener('submit', function(event) {
+    event.preventDefault();
+  
+    var tags = [];
+    var tagInputs = document.getElementsByClassName('tagInput');
+  
+    for (var i = 0; i < tagInputs.length; i++) {
+      var tagInput = tagInputs[i].querySelector('.tag');
+      var countSpan = tagInputs[i].querySelector('.count');
+  
+      var tag = tagInput.value.trim();
+      var count = parseInt(countSpan.textContent);
+  
+      if (tag) {
+        tags.push({ tag: tag, count: count });
+      }
+    }
+  
     // 直接将你得到的 userID 粘贴在这里
     var useridInput = user_id;
-
+  
     // if no tags were entered, do nothing
-    if (!tagsInput) {
-        alert("Please enter at least one tag.");
-        return;
+    if (tags.length === 0) {
+      alert("Please enter at least one tag.");
+      return;
     }
-
-    // convert tags from comma-separated string to array
-    var tags = tagsInput.split(',').map(tag => ({ tag: tag.trim(), count: 1 }));
-
+  
     fetch('https://rhnlx9ogtj.execute-api.us-east-1.amazonaws.com/pd/findbytag', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${idToken}`
-        },
-        body: JSON.stringify({ tags: tags, user_id: useridInput }),  // 在发送的数据中添加 user_id 字段
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${idToken}`
+      },
+      body: JSON.stringify({ tags: tags, user_id: useridInput }), // Sending both tags and counts
     })
-    .then(response => response.json())
-    .then(data => {
+      .then(response => response.json())
+      .then(data => {
         var searchResults = document.getElementById('searchResults');
         searchResults.innerHTML = ''; // clear previous search results
         data.links.forEach(function(link) {
-            var img = document.createElement('img');
-            img.src = link;
-            searchResults.appendChild(img);
+          var img = document.createElement('img');
+          img.src = link;
+          searchResults.appendChild(img);
         });
-    })
-    .catch(error => console.error('Error:', error));
-});
+      })
+      .catch(error => console.error('Error:', error));
+  });
+  
+  
+  document.addEventListener('click', function(event) {
+    if (event.target.matches('.increaseCount')) {
+      var countSpan = event.target.parentNode.querySelector('.count');
+      var count = parseInt(countSpan.textContent);
+      countSpan.textContent = count + 1;
+  
+      var decreaseButton = event.target.parentNode.querySelector('.decreaseCount');
+      decreaseButton.disabled = false;
+    } else if (event.target.matches('.decreaseCount')) {
+      var countSpan = event.target.parentNode.querySelector('.count');
+      var count = parseInt(countSpan.textContent);
+      if (count > 1) {
+        countSpan.textContent = count - 1;
+      } else {
+        event.target.parentNode.remove();
+      }
+    }
+  });
+  
 
 // find image by image
 async function findimageByimage(event) {

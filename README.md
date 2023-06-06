@@ -10,7 +10,6 @@
 
 ## AWS services APIs
 
-
 ### upload image
 
 - API:  `https://rhnlx9ogtj.execute-api.us-east-1.amazonaws.com/pd/image`
@@ -29,7 +28,11 @@
           {
               "tag": "person",
               "count": 1
-          }
+          },
+  	{
+  	    "tag": "bus",
+  	    "count": 1
+  	}
       ],
       "user_id": "c60e1129-e6b5-4f43-803f-95287e91a210"
   }
@@ -42,7 +45,6 @@
       ]
   }
   ```
-
 
 ### find by image
 
@@ -67,7 +69,6 @@
   }
   ```
 
-
 ### Manual change tags
 
 - API:  `https://rhnlx9ogtj.execute-api.us-east-1.amazonaws.com/pd/munualchangetag`
@@ -91,7 +92,6 @@
   ```
 - return JSON example: `{"Tags updated successfully"}`
 
-
 ### Delete image
 
 - API:  `https://rhnlx9ogtj.execute-api.us-east-1.amazonaws.com/pd/deleteimage`
@@ -100,10 +100,12 @@
 - return JSON example: `{"Image successfully deleted"}`
 
 ### Show All Images
+
 - API:  `https://rhnlx9ogtj.execute-api.us-east-1.amazonaws.com/pd/showallimages`
 - method: **POST**
 - request JSON example: `{"user_id": "c60e1129-e6b5-4f43-803f-95287e91a210"}`
 - return JSON example: `{"images": [{"url": "https://a3-image.s3.amazonaws.com/images/4c039c18039511ee9d29fee879db0a70.jpg?AWSAcc...", "tags": [{"count": 1.0, "tag": "bus"}, {"count": 1.0, "tag": "person"}]}, {"url": "https://a3-image.s3.amazonaws.com/images/125d1...", "tags": [{"count": 1.0, "tag": "bus"}, {"count": 1.0, "tag": "person"}]}]}`
+
 ---
 
 NOTE: In the top 3 APIs, you need include user_id in request body. Following is an example to decode id_token and get user_id(**sub**).

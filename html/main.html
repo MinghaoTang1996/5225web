@@ -24,20 +24,25 @@
 
 
     <h1>AUTOMATED OBJECT DETECTION TAGGING AND QUERY HANDLING SYSTEM</h1>
-    
     <div class="search-form">
         <form id="tagsForm">
-            <input type="text" id="tags" name="tags" placeholder="Enter tags (separated by comma)">
-            <input type="submit" value="SEARCH BY TAGS">
-        </form>
+            <div id="tagInputs">
+              <div class="tagInput">
+                <input type="text" class="tag" placeholder="Enter tag">
+                <button class="decreaseCount" disabled>-</button>
+                <span class="count">1</span>
+                <button class="increaseCount">+</button>
+              </div>
+            </div>
+            <button type="submit">Search</button>
+          </form>
+          <button id="addTag">Add Tag</button>    
     </div>
-
     <div class="search-results" id="searchResults">
         <!-- Search results will be appended here -->
     </div>
 
-
-    <h1>Find Images Based on Tags</h1>
+    <h1>Find Images Based on Image</h1>
     <form id="image_form">
         <label for="findByImage_image">Image File:</label><br>
         <input type="file" id="findByImage_image" name="image"><br>

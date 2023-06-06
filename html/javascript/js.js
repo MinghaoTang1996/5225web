@@ -4,6 +4,15 @@ const idToken = new URLSearchParams(hashFragment).get('id_token');
 const user_id = decodeIdToken(idToken).sub;
 console.log(user_id);
 
+// Check if the user is logged in
+document.getElementById('logoutButton').onclick = function() {
+    // Clear user login data
+    const user_id = null;
+    console.log(user_id);
+    // Redirect to login page
+    window.location.href = "login.html";
+};
+
 // Convert image to base64
 async function convertImageToBase64(image) {
     return new Promise((resolve, reject) => {
@@ -64,9 +73,9 @@ var requestJSON = null;
 var responseJSON = null;
 
 // Show all images
-document.addEventListener('DOMContentLoaded', function() {
-    openTab(null, 'showAllImages');
-});
+// document.addEventListener('DOMContentLoaded', function() {
+//     openTab(null, 'showAllImages');
+// });
 
 window.onload = function() {
     var useridInput = user_id;

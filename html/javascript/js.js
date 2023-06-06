@@ -325,13 +325,6 @@ function loadTestDataWithTag() {
       .then(response => response.json())
       .then(data => {
       var outputJSON = formatJSON(data);
-      // console.log(outputJSON);
-      // console.log(outputJSON.images);
-
-      // Create an array of tags with count = 1 for each link in the links array
-      // let tagArray = data.links.map(link => ({tag: data.tags[0], count: 1}));
-      // console.log(tagArray);
-      //displayImages(data.links, tagArray);
       displayImages(outputJSON.images);
       });
 
@@ -409,6 +402,8 @@ function loadTestDataWithTag() {
       deleteButton.textContent = "Delete Image";
       deleteButton.dataset.index = index;
 
+      
+
       imageContainer.appendChild(imageElement);
       imageContainer.appendChild(urlElement);  // new line
       imageContainer.appendChild(tagElement);
@@ -420,87 +415,224 @@ function loadTestDataWithTag() {
       editButton.addEventListener("click", () => {
         const url = image.url;
         const tagArray = image.tags;
+      
+        // Determine the existing tags and their counts
+        const tagCounts = tagArray.reduce((acc, curr) => {
+          acc[curr.tag] = curr.count;
+          return acc;
+        }, {});
+      
+        // Create the tag edit interface and display it in a modal window
+        const modalBackground = document.createElement("div");
+        modalBackground.className = "modal-background";
+        modalBackground.addEventListener("click", (event) => {
+          if (event.target === modalBackground) {
+            closeModal();
+          }
+        });
+      
+        const modalDiv = document.createElement("div");
+        modalDiv.className = "modal";
+        modalDiv.innerHTML = `
+          <h2>Edit Tags</h2>
+          <form>
+            <div class="tag-edit">
+              ${Object.keys(tagCounts).map(tag => `
+                <div>
+                  <label>${tag}:</label>
+                  <button type="button" data-action="decrease" data-tag="${tag}">-</button>
+                  <span>${tagCounts[tag]}</span>
+                  <button type="button" data-action="increase" data-tag="${tag}">+</button>
+                </div>
+              `).join("")}
+              <div>
+                <input type="text" name="new-tag-name" placeholder="New Tag Name">
+                <input type="number" name="new-tag-count" placeholder="Count" value="1" min="0">
+                <button type="button" data-action="add">Add</button>
+              </div>
+            </div>
+            <div class="modal-buttons">
+              <button type="button" class="cancel-button">Cancel</button>
+              <button type="submit">Save</button>
+            </div>
+          </form>
+        `;
+      
+        const closeModal = () => {
+          document.body.removeChild(modalBackground);
+          modalBackground.removeEventListener("click", closeModal);
+          modalDiv.querySelector(".cancel-button").removeEventListener("click", closeModal);
+        };
+        modalDiv.querySelector(".cancel-button").addEventListener("click", closeModal);
         
-        const tagString = prompt("Enter tags (comma-separated):", tagArray.map(tag => tag.tag).join(","));
-        const tags = tagString.split(",").map(tag => tag.trim());
+        modalDiv.addEventListener("submit", event => {
+          event.preventDefault();
       
-        // Determine which tags to remove and which tags to add
-        const removeTags = tagArray.filter(tag => !tags.includes(tag.tag));
-        const addTags = tags.filter(tag => !tagArray.map(tag => tag.tag).includes(tag));
-      
-        // Determine the operation type for the API request
-        let type = 0; // 0 for remove
-        if (addTags.length > 0) {
-          type = 1; // 1 for add
-        }
-      
-        // Construct the JSON objects for the requests
-        if (removeTags.length > 0) {
-          const jsonObject1 = JSON.stringify({
-            "url": url.split('?')[0],
-            "type": 0,
-            "tags": removeTags.map(tag => ({tag: tag.tag, count: tag.count}))
-          });
-      
-          console.log(jsonObject1);
-      
-          // Send the first JSON object for tag removal to the API endpoint
-          const apiUrl1 = "https://rhnlx9ogtj.execute-api.us-east-1.amazonaws.com/pd/manualchangetag";
-          fetch(apiUrl1, {
-              method: 'POST',
-              headers: {
-                  'Content-Type': 'application/json',
-                  'Authorization': `Bearer ${idToken}`
-              },
-              body: jsonObject1
-          })
-          .then(response => response.json())
-          .then(data => {
-            console.log(data);
-            const jsonString = JSON.stringify(data, null, 2);
-            if (!jsonString.includes("Tags updated successfully")) {
-              console.error('Failed to update image tags:', data);
-            }
-          })
-          .catch(error => console.error('Error:', error));
-        }
-      
-        if (addTags.length > 0) {
-          const jsonObject2 = JSON.stringify({
-            "url": url.split('?')[0],
-            "type": 1,
-            "tags": addTags.map(tag => ({tag: tag, count: tagArray.length}))
-          });
-      
-          console.log(jsonObject2);
-      
-          // Send the second JSON object for tag additions to the API endpoint
-          const apiUrl2 = "https://rhnlx9ogtj.execute-api.us-east-1.amazonaws.com/pd/manualchangetag";
-          fetch(apiUrl2, {
-              method: 'POST',
-              headers: {
-                  'Content-Type': 'application/json',
-                  'Authorization': `Bearer ${idToken}`
-              },
-              body: jsonObject2
-          })
-          .then(response => response.json())
-          .then(data => {
-            console.log(data);
-            const jsonString = JSON.stringify(data, null, 2);
-            if (jsonString.includes("Tags updated successfully")) {
-              // Update the image object with the new tags
-              image.tags = [...tagArray.filter(tag => tags.includes(tag.tag)), ...addTags.map(tag => ({tag: tag, count: tagArray.length}))];
-      
-              // Redraw the images
-              displayImages(images);
+          // Construct the arrays of tag objects for the API request
+          const removeTags = [];
+          const addTags = [];
+          modalDiv.querySelectorAll(".tag-edit > div").forEach(tagDiv => {
+            const nameInput = tagDiv.querySelector("[name=new-tag-name]");
+            if (nameInput) {
+              const name = nameInput.value.trim();
+              const count = parseInt(tagDiv.querySelector("[name=new-tag-count]").value);
+              if (name === "") {
+                return;
+              }
+              if (count > 0) {
+                addTags.push({tag: name, count: count});
+              }
             } else {
-              console.error('Failed to update image tags:', data);
+              const tag = tagDiv.querySelector("label").textContent.replace(":", "");
+              const count = parseInt(tagDiv.querySelector("span").textContent);
+              const origCount = tagCounts[tag] || 0;
+              if (count > origCount) {
+                addTags.push({tag: tag, count: count - origCount});
+              } else if (count < origCount) {
+                removeTags.push({tag: tag, count: origCount - count});
+              }
             }
-          })
-          .catch(error => console.error('Error:', error));
-        }
+          });
+      
+          // Construct the JSON objects for the requests
+          if (removeTags.length > 0) {
+            const jsonObject1 = JSON.stringify({
+              "url": url.split('?')[0],
+              "type": 0,
+              "tags": removeTags
+            });
+      
+            console.log(jsonObject1);
+      
+            // Send the first JSON object for tag removal to the API endpoint
+            const apiUrl1 = "https://rhnlx9ogtj.execute-api.us-east-1.amazonaws.com/pd/manualchangetag";
+            fetch(apiUrl1, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${idToken}`
+                },
+                body: jsonObject1
+            })
+            .then(response => response.json())
+            .then(data => {
+              console.log(data);
+              const jsonString = JSON.stringify(data, null, 2);
+              if (!jsonString.includes("Tags updated successfully")) {
+                console.error('Failed to update image tags:', data);
+              }
+            })
+            .catch(error => console.error('Error:', error));
+          }
+      
+          if (addTags.length > 0) {
+            const jsonObject2 = JSON.stringify({
+              "url": url.split('?')[0],
+              "type": 1,
+              "tags": addTags
+            });
+      
+            console.log(jsonObject2);
+      
+            // Send the second JSON object for tag additions to the API endpoint
+            const apiUrl2 = "https://rhnlx9ogtj.execute-api.us-east-1.amazonaws.com/pd/manualchangetag";
+            fetch(apiUrl2, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${idToken}`
+                },
+                body: jsonObject2
+            })
+            .then(response => response.json())
+            .then(data => {
+              console.log(data);
+              const jsonString = JSON.stringify(data, null, 2);
+              if (jsonString.includes("Tags updated successfully")) {
+                // Update the image object with the new tags
+                const updatedTags = addTags.map(tag => ({tag: tag.tag, count: tag.count}));
+                image.tags = [
+                  ...tagArray.filter(tag => !(tag.tag in tagCounts)),
+                  ...updatedTags,
+                ];
+                if (removeTags.length > 0) {
+                  image.tags = image.tags.filter(tag => !removeTags.some(removeTag => removeTag.tag === tag.tag));
+                }
+      
+                // Redraw the images
+                displayImages(images);
+              } else {
+                console.error('Failed to update image tags:', data);
+              }
+            })
+            .catch(error => console.error('Error:', error));
+          }
+      
+          closeModal();
+        });
+      
+        modalDiv.querySelectorAll("[data-action=decrease]").forEach(button => {
+          const tag = button.dataset.tag;
+          const countElement = button.nextElementSibling;
+          const count = parseInt(countElement.textContent);
+      
+          button.addEventListener("click", () => {
+            countElement.textContent = Math.max(0, count - 1);
+          });
+        });
+      
+        modalDiv.querySelectorAll("[data-action=increase]").forEach(button => {
+          const tag = button.dataset.tag;
+          const countElement = button.previousElementSibling;
+          const count = parseInt(countElement.textContent);
+      
+          button.addEventListener("click", () => {
+            countElement.textContent = count + 1;
+          });
+        });
+      
+        modalDiv.querySelector("[data-action=add]").addEventListener("click", () => {
+          const nameInput = modalDiv.querySelector("[name=new-tag-name]");
+          const countInput = modalDiv.querySelector("[name=new-tag-count]");
+          const name = nameInput.value.trim();
+          const count = parseInt(countInput.value);
+          if (name === "") {
+            return;
+          }
+      
+          const div = document.createElement("div");
+          div.innerHTML = `
+            <div>
+              <label>${name}:</label>
+              <button type="button" data-action="decrease" data-tag="${name}">-</button>
+              <span>${count}</span>
+              <button type="button" data-action="increase" data-tag="${name}">+</button>
+            </div>
+          `;
+      
+          const removeButton = div.querySelector("[data-action=decrease]");
+          const countElement = div.querySelector("span");
+      
+          removeButton.addEventListener("click", () => {
+            countElement.textContent = Math.max(0, parseInt(countElement.textContent) - 1);
+          });
+      
+          div.querySelector("[data-action=increase]").addEventListener("click", () => {
+            countElement.textContent = parseInt(countElement.textContent) + 1;
+          });
+      
+          modalDiv.querySelector(".tag-edit").appendChild(div);
+          nameInput.value = "";
+          countInput.value = "1";
+        });
+      
+        modalBackground.appendChild(modalDiv);
+        document.body.appendChild(modalBackground);
+
+        
       });
+      
+      
       
       
 
@@ -578,3 +710,6 @@ function testdisplay(){
   displayImages(processedJSON.images);
   
 }
+
+
+

@@ -415,25 +415,28 @@ function loadTestDataWithTag() {
 
       // Add event listener to the "Edit Tag" button
       editButton.addEventListener("click", () => {
-        const tagString = prompt("Enter tags (comma-separated):", tagArray[index].tag);
+        const url = image.url;
+        const tagArray = image.tags;
+      
+        const tagString = prompt("Enter tags (comma-separated):", tagArray.map(tag => tag.tag).join(","));
         const tags = tagString.split(",").map(tag => tag.trim());
-
+      
         // Determine whether to add or remove tags
         let type = 0; // 0 for remove
-        if (tags.length > tagArray[index].tag.split(",").length) {
+        if (tags.length > tagArray.length) {
           type = 1; // 1 for add
         }
-
+      
         // Construct the JSON object for the request
-
+      
         const jsonObject = JSON.stringify({
-          "url": links[index].split('?')[0],
+          "url": url.split('?')[0],
           "type": type,
           "tags": tags.map(tag => ({tag: tag, count: tagArray.length}))
         });
-
+      
         console.log(jsonObject);
-
+      
         // Send the JSON object to the API endpoint
         const apiUrl = "https://rhnlx9ogtj.execute-api.us-east-1.amazonaws.com/pd/munualchangetag";
         fetch(apiUrl, {
@@ -445,23 +448,28 @@ function loadTestDataWithTag() {
             body: jsonObject
         })
         .then(response => response.json())
-
-        // Update the tag element text content
-        // tagArray[index].tag = tags.join(", ");
-        // tagElement.textContent = `Tags: ${tagArray[index].tag}`;
-        
         .then(data => {
           console.log(data);
-            if (data.body === "Tags updated successfully") {
-                tagArray[index].tag = tags.join(", ");
-                tagElement.textContent = `Tags: ${tagArray[index].tag}`;
+          const jsonString = JSON.stringify(data, null, 2);
+            if (jsonString.includes("Tags updated successfully")) {
+                // Filter the images array to update the tags for the selected image
+                outputJSON.images = outputJSON.images.map(img => {
+                  if (img.url === url) {
+                    return { url, tags: tags.map(tag => ({tag, count: tagArray.length})) };
+                  } else {
+                    return img;
+                  }
+                });
+      
+                // Redraw the images
+                displayImages(outputJSON.images);
             } else {
                 console.error('Failed to update image:', data);
             }
         })
         .catch(error => console.error('Error:', error));
-      
       });
+      
 
 
       // Add event listener to the "Delete Image" button

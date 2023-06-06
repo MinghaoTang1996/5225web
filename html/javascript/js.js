@@ -414,7 +414,8 @@ function loadTestDataWithTag() {
       .then(response => response.json())
       .then(data => {
         console.log(data);
-          if (data.body === "Image successfully deleted") {
+        const jsonString = JSON.stringify(data, null, 2);
+          if (jsonString.includes("Image successfully deleted")) {
               // Find the index of the link in the links array
               const index = links.indexOf(link);
 

@@ -4,10 +4,7 @@
 <head>
     <title>Main Page</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-<<<<<<< HEAD
     <link rel="stylesheet" type="text/css" href="css/styles.css">
-=======
-
     <style>
         .tab-container {
             width: 100%;
@@ -37,71 +34,10 @@
             padding: 20px;
         }
     </style>
->>>>>>> 08da4bae88ef2be7dd1d71acc37522cdc058f7c6
 </head>
 
 <body>
 <h1>Welcome!</h1>
-<<<<<<< HEAD
-<a href="query.html">Go to query page</a> <br>
-<button class="getallimages">get all images</button>
-
-<div class="upload">
-    <h2>Upload Image</h2>
-    <form id="form">
-        <label for="file">Image File:</label><br>
-        <input type="file" id="file" name="file" required><br>
-        <input type="submit" value="Upload Image">
-    </form>
-    <div id="result"></div>
-</div>
-
-
-    <h1>AUTOMATED OBJECT DETECTION TAGGING AND QUERY HANDLING SYSTEM</h1>
-    <div class="search-form">
-        <form id="tagsForm">
-            <div id="tagInputs">
-              <div class="tagInput">
-                <input type="text" class="tag" placeholder="Enter tag">
-                <button class="decreaseCount" disabled>-</button>
-                <span class="count">1</span>
-                <button class="increaseCount">+</button>
-              </div>
-            </div>
-            <button type="submit">Search</button>
-          </form>
-          <button id="addTag">Add Tag</button>    
-    </div>
-    <div class="search-results" id="searchResults">
-        <!-- Search results will be appended here -->
-    </div>
-
-    <h1>Find Images Based on Image</h1>
-    <form id="image_form">
-        <label for="findByImage_image">Image File:</label><br>
-        <input type="file" id="findByImage_image" name="image"><br>
-        <input type="submit" value="Find Images">
-    </form>
-    <div id="image_result"></div>
-    
-<!-- Images list will be appended here -->
-<div>
-    <h1>Image List</h1>
-  
-    <!-- Test with tag button -->
-    <button class="button" onclick="loadTestDataWithTag()">Test with tag</button>
-  
-    <!-- Test without tag button -->
-    <button class="button" onclick="loadTestDataWithoutTag()">Test without tag</button>
-  
-    <div id="image-list"></div>
-
-</div>
-
-<h1>All Images</h1>
-<div class="image-container" id="imageContainer">
-    <!-- Images will be appended here -->
-=======
 <div class="tab-container">
     <div class="tab-header">
         <button class="tab-button active" onclick="openTab(event, 'uploadImage')">Upload Image</button>
@@ -163,7 +99,18 @@
         </div>
     </div>
 
->>>>>>> 08da4bae88ef2be7dd1d71acc37522cdc058f7c6
+</div>
+
+<div>
+    <h1>Image List</h1>
+
+  <!-- Test with tag button -->
+  <button class="button" onclick="loadTestDataWithTag()">Test with tag</button>
+
+  <!-- Test without tag button -->
+  <button class="button" onclick="loadTestDataWithoutTag()">Test without tag</button>
+
+  <div id="image-list"></div>
 </div>
 
 
@@ -191,10 +138,4 @@
 </script>
 </body>
 
-<<<<<<< HEAD
-
-
-
-=======
->>>>>>> 08da4bae88ef2be7dd1d71acc37522cdc058f7c6
 </html>

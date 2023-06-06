@@ -238,7 +238,9 @@ async function findimageByimage(event) {
             result += "</ul>";
             document.getElementById('image_result').innerHTML = result;
             console.log(result);
-            processResponseJSON(responseJSON);
+            //processResponseJSON(responseJSON);
+            var outputJSON = formatJSON(responseJSON);
+            displayImages(outputJSON.images);
         })
         .catch(error => console.error('Error:', error));
         
@@ -287,6 +289,7 @@ function processResponseJSON(responseJSON) {
     displayImages(responseJSON.links, tagArray);
   }
 }
+
 
 function formatJSON(responseJSON) {
   var images = [];

@@ -60,6 +60,7 @@ function decodeIdToken(token) {
     return JSON.parse(jsonPayload);
 }
 
+// Show all images
 window.onload = function() {
     var useridInput = user_id;
     fetch('https://rhnlx9ogtj.execute-api.us-east-1.amazonaws.com/pd/showallimages', {
@@ -95,7 +96,7 @@ window.onload = function() {
 var requestJSON = null;
 var responseJSON = null;
 
-// find image by tags
+
 document.getElementById('addTag').addEventListener('click', function(event) {
     event.preventDefault();
   
@@ -104,7 +105,7 @@ document.getElementById('addTag').addEventListener('click', function(event) {
     newTagInput.className = 'tagInput';
     newTagInput.innerHTML = `
       <input type="text" class="tag" placeholder="Enter tag">
-      <button class="decreaseCount" disabled>-</button>
+      <button class="decreaseCount">-</button>
       <span class="count">1</span>
       <button class="increaseCount">+</button>
     `;
@@ -166,7 +167,6 @@ document.getElementById('addTag').addEventListener('click', function(event) {
       .catch(error => console.error('Error:', error));
   });
   
-
   
   document.addEventListener('click', function(event) {
     if (event.target.matches('.increaseCount')) {
@@ -177,13 +177,15 @@ document.getElementById('addTag').addEventListener('click', function(event) {
       var decreaseButton = event.target.parentNode.querySelector('.decreaseCount');
       decreaseButton.disabled = false;
     } else if (event.target.matches('.decreaseCount')) {
-      var countSpan = event.target.parentNode.querySelector('.count');
-      var count = parseInt(countSpan.textContent);
-      if (count > 1) {
-        countSpan.textContent = count - 1;
-      } else {
-        event.target.parentNode.remove();
-      }
+        var countSpan = event.target.parentNode.querySelector('.count');
+        var count = parseInt(countSpan.textContent);
+        if (count === 1) {
+            event.target.parentNode.remove();
+          } else {
+            countSpan.textContent = count - 1;
+        }
+  
+      
     }
   });
   
@@ -223,7 +225,7 @@ async function findimageByimage(event) {
                 result += "<li><a href='" + links[i] + "'>" + links[i] + "</a></li>";
             }
             result += "</ul>";
-            document.getElementById('result').innerHTML = result;
+            document.getElementById('image_result').innerHTML = result;
             console.log(result);
             processResponseJSON(responseJSON);
         })

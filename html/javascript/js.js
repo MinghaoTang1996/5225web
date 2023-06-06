@@ -93,7 +93,7 @@ window.onload = function() {
 };
 
 
-// find image by tags
+
 document.getElementById('addTag').addEventListener('click', function(event) {
     event.preventDefault();
   
@@ -102,14 +102,13 @@ document.getElementById('addTag').addEventListener('click', function(event) {
     newTagInput.className = 'tagInput';
     newTagInput.innerHTML = `
       <input type="text" class="tag" placeholder="Enter tag">
-      <button class="decreaseCount" disabled>-</button>
+      <button class="decreaseCount">-</button>
       <span class="count">1</span>
       <button class="increaseCount">+</button>
     `;
     tagInputs.appendChild(newTagInput);
   });
   
-  // remove tag input
   document.getElementById('tagsForm').addEventListener('submit', function(event) {
     event.preventDefault();
   
@@ -168,13 +167,15 @@ document.getElementById('addTag').addEventListener('click', function(event) {
       var decreaseButton = event.target.parentNode.querySelector('.decreaseCount');
       decreaseButton.disabled = false;
     } else if (event.target.matches('.decreaseCount')) {
-      var countSpan = event.target.parentNode.querySelector('.count');
-      var count = parseInt(countSpan.textContent);
-      if (count > 1) {
-        countSpan.textContent = count - 1;
-      } else {
-        event.target.parentNode.remove();
-      }
+        var countSpan = event.target.parentNode.querySelector('.count');
+        var count = parseInt(countSpan.textContent);
+        if (count === 1) {
+            event.target.parentNode.remove();
+          } else {
+            countSpan.textContent = count - 1;
+        }
+  
+      
     }
   });
   

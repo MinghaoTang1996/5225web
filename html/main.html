@@ -40,12 +40,19 @@
 <h1>Welcome!</h1>
 <div class="tab-container">
     <div class="tab-header">
-        <button class="tab-button active" onclick="openTab(event, 'uploadImage')">Upload Image</button>
+        <!-- <button class="tab-button active" onclick="openTab(event, 'showAllImages')">All Images</button> -->
+        <button class="tab-button" onclick="openTab(event, 'uploadImage')">Upload Image</button>
         <button class="tab-button" onclick="openTab(event, 'findTag')">Find Tag</button>
         <button class="tab-button" onclick="openTab(event, 'findImg')">Find Images by Image</button>
-        <button class="tab-button" onclick="openTab(event, 'showAllImages')">All Images</button>
         <button class="tab-button" onclick="openTab(event, 'updateTags')">Update Tags</button>
 
+    </div>
+
+    <div class="tab-content" id="showAllImages">
+        <h1>All Images</h1>
+        <div class="image-container" id="imageContainer">
+            <!-- Images will be appended here -->
+        </div>
     </div>
 
     <div class="tab-content" id="uploadImage">
@@ -94,12 +101,7 @@
     </div>
 
 
-    <div class="tab-content" id="showAllImages">
-        <h1>All Images</h1>
-        <div class="image-container" id="imageContainer">
-            <!-- Images will be appended here -->
-        </div>
-    </div>
+    
 
 </div>
 

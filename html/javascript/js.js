@@ -61,6 +61,10 @@ function decodeIdToken(token) {
 }
 
 // Show all images
+document.addEventListener('DOMContentLoaded', function() {
+    openTab(null, 'showAllImages');
+});
+
 window.onload = function() {
     var useridInput = user_id;
     fetch('https://rhnlx9ogtj.execute-api.us-east-1.amazonaws.com/pd/showallimages', {

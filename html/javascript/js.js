@@ -59,6 +59,9 @@ function decodeIdToken(token) {
 
     return JSON.parse(jsonPayload);
 }
+// Define variables to hold the JSON request and response
+var requestJSON = null;
+var responseJSON = null;
 
 // Show all images
 document.addEventListener('DOMContentLoaded', function() {
@@ -78,6 +81,12 @@ window.onload = function() {
     .then(response => response.json())
     .then(data => {
         var imageContainer = document.getElementById('imageContainer');
+        responseJSON = data;
+        console.log(responseJSON);
+
+        //processResponseJSON(responseJSON);
+        displayImages(responseJSON.images)
+
         data.images.forEach(function(image) {
             var img = document.createElement('img');
             img.src = image.url;
@@ -96,11 +105,9 @@ window.onload = function() {
     .catch(error => console.error('Error:', error));
 };
 
-// Define variables to hold the JSON request and response
-var requestJSON = null;
-var responseJSON = null;
 
 
+//find image by tags
 document.getElementById('addTag').addEventListener('click', function(event) {
     event.preventDefault();
   
@@ -240,6 +247,7 @@ async function findimageByimage(event) {
 
 // Define a separate function to fetch responseJSON
 function processResponseJSON(responseJSON) {
+  let links, tags;
   if (typeof responseJSON === 'string' || responseJSON instanceof String) {
     // If responseJSON is a URL, make a new fetch call
     fetch(responseJSON)
@@ -253,30 +261,77 @@ function processResponseJSON(responseJSON) {
         displayImages(data.links, tagArray);
       })
       .catch(error => console.error('Error:', error));
-  } else {
+  } 
+  // If responseJSON has "images" property
+  else if (Array.isArray(responseJSON.images)) {
+    // If responseJSON has "images" property
+    links = responseJSON.images.map(img => img.url);
+    tags = responseJSON.images.flatMap(img => 
+      img.tags.map(tag => ({
+        tag: tag.tag,
+        count: tag.count
+      }))
+    );
+    displayImages(links, tags);
+  }
+  
+  else {
     // If responseJSON is already a JSON object, use it directly
     let tagArray = responseJSON.links.map(link => ({
       tag: responseJSON.tags[0],
       count: 1
-    }));
+    })
+    
+    );
     //console.log(responseJSON.links);
     displayImages(responseJSON.links, tagArray);
   }
 }
 
+function formatJSON(responseJSON) {
+  var images = [];
+  for (var i = 0; i < responseJSON.links.length; i++) {
+    var image = {};
+    image.url = responseJSON.links[i];
+    image.tags = [];
+    for (var j = 0; j < responseJSON.tags.length; j++) {
+      image.tags.push({
+        count: 1,
+        tag: responseJSON.tags[j],
+      });
+    }
+    images.push(image);
+  }
+  var outputJSON = {
+    images: images,
+  };
+  return outputJSON;
+}
+
+
 
 // Function to load the test JSON data with tag
 function loadTestDataWithTag() {
+  //testdisplay();
+
   fetch("./test_json/test_withtag.json")
       .then(response => response.json())
       .then(data => {
+      var outputJSON = formatJSON(data);
+      // console.log(outputJSON);
+      // console.log(outputJSON.images);
+
       // Create an array of tags with count = 1 for each link in the links array
-      let tagArray = data.links.map(link => ({tag: data.tags[0], count: 1}));
-      console.log(tagArray);
-      displayImages(data.links, tagArray);
+      // let tagArray = data.links.map(link => ({tag: data.tags[0], count: 1}));
+      // console.log(tagArray);
+      //displayImages(data.links, tagArray);
+      displayImages(outputJSON.images);
       });
+
+      
   }
 
+  
   // Function to load the test JSON data without tag
   function loadTestDataWithoutTag() {
   Promise.all([
@@ -299,34 +354,41 @@ function loadTestDataWithTag() {
 
   // Function to edit the tag for an image
   // Function to display images and tags
-  function displayImages(links, tagArray) {
+  function displayImages(images) {
     // Get the image list element
     const imageList = document.getElementById("image-list");
-
+  
     // Clear the image list
     imageList.innerHTML = "";
-
-    // Loop through the links and create an image element for each link
-    links.forEach((link, index) => {
+  
+    // Loop through the images and create an image element for each image
+    images.forEach((image, index) => {
       const imageContainer = document.createElement("div");
       imageContainer.classList.add("image-container");
-
+  
       const imageElement = document.createElement("img");
-      imageElement.src = link;
+      imageElement.src = image.url;
       imageElement.classList.add("image");
-
+  
       const urlElement = document.createElement("div");  // new line
-      //urlElement.textContent = `URL: ${link}`;  // new line
-      if (link.length > 50) {
-        const shortLink = link.slice(0, 25) + '...' + link.slice(-25);
-        urlElement.innerHTML = `URL: <a href="${link}">${shortLink}</a>`;
+      //urlElement.textContent = `URL: ${image.url}`;  // new line
+      if (image.url.length > 50) {
+        const shortUrl = image.url.slice(0, 25) + '...' + image.url.slice(-25);
+        urlElement.innerHTML = `URL: <a href="${image.url}">${shortUrl}</a>`;
       } else {
-        urlElement.textContent = `URL: ${link}`;
+        urlElement.textContent = `URL: ${image.url}`;
       }
-
+  
       const tagElement = document.createElement("div");
       tagElement.classList.add("tag");
-      tagElement.textContent = `Tags: ${tagArray[index].tag}`;
+      tagElement.textContent = `Tags:`;
+  
+      // Loop through the tags and create a tag element for each tag
+      image.tags.forEach((tag) => {
+        const tagElementInner = document.createElement("div");
+        tagElementInner.textContent = `${tag.tag} (${tag.count})`;
+        tagElement.appendChild(tagElementInner);
+      });
 
       const editButton = document.createElement("button");
       editButton.classList.add("button");
@@ -447,3 +509,31 @@ function loadTestDataWithTag() {
 document.querySelector('#form').addEventListener('submit', uploadImage);
 document.querySelector('#image_form').addEventListener('submit', findimageByimage);
 
+function testdisplay(){
+  const processedJSON = {
+    "images": [
+      {
+        "url": "https://media.vanityfair.com/photos/55ba400ffff2c16856a7656b/master/w_2580%2Cc_limit/ibdl-taylor-swift-best-concert-fashion-03-01.jpg",
+        "tags": [
+          {
+            "count": 1,
+            "tag": "cup"
+          }
+        ]
+      },
+      {
+        "url": "https://media.vanityfair.com/photos/55ba4014fff2c16856a76597/master/w_2580%2Cc_limit/ibdl-taylor-swift-best-concert-fashion-04.jpg",
+        "tags": [
+          {
+            "count": 1,
+            "tag": "cup"
+          }
+        ]
+      }
+    ]
+  };
+  console.log(processedJSON);
+  console.log(processedJSON.images);
+  displayImages(processedJSON.images);
+  
+}

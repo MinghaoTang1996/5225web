@@ -60,7 +60,6 @@ function decodeIdToken(token) {
     return JSON.parse(jsonPayload);
 }
 
-// Show all images
 window.onload = function() {
     var useridInput = user_id;
     fetch('https://rhnlx9ogtj.execute-api.us-east-1.amazonaws.com/pd/showallimages', {
@@ -74,14 +73,24 @@ window.onload = function() {
     .then(response => response.json())
     .then(data => {
         var imageContainer = document.getElementById('imageContainer');
-        data.links.forEach(function(link) {
+        data.images.forEach(function(image) {
             var img = document.createElement('img');
-            img.src = link;
+            img.src = image.url;
             imageContainer.appendChild(img);
+
+            var tagsList = document.createElement('ul');
+            image.tags.forEach(function(tag) {
+                var tagItem = document.createElement('li');
+                tagItem.textContent = `Tag: ${tag.tag}, Count: ${tag.count}`;
+                tagsList.appendChild(tagItem);
+            });
+
+            imageContainer.appendChild(tagsList);
         });
     })
     .catch(error => console.error('Error:', error));
 };
+
 
 // find image by tags
 document.getElementById('tagsForm').addEventListener('submit', function(event) {

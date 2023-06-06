@@ -16,10 +16,10 @@ document.getElementById('logoutButton').onclick = function() {
 // Convert image to base64
 async function convertImageToBase64(image) {
     return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onload = () => resolve(reader.result.split(",")[1]);
-        reader.onerror = error => reject(error);
-        reader.readAsDataURL(image);
+        const fileReader = new FileReader();
+        fileReader.onload = () => resolve(fileReader.result.split(",")[1]);
+        fileReader.onerror = error => reject(error);
+        fileReader.readAsDataURL(image);
     });
 }
 
@@ -28,11 +28,6 @@ async function uploadImage(event) {
     event.preventDefault();
     const image = document.querySelector('#file').files[0];
     const base64Str = await convertImageToBase64(image);
-    const payload = {
-        name: image.name,
-        file: base64Str,
-        user_id: user_id
-    };
     try {
         const response = await fetch("https://rhnlx9ogtj.execute-api.us-east-1.amazonaws.com/pd/image", {
             method: 'POST',
@@ -40,7 +35,7 @@ async function uploadImage(event) {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${idToken}`
             },
-            body: JSON.stringify(payload)
+            body: JSON.stringify({name:image.name,file:base64Str,user_id:user_id})
         })
         if (!response.ok) {
             throw new Error("upload fail");

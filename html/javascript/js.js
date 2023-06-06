@@ -344,8 +344,10 @@ function loadTestDataWithTag() {
       tag: tags.tags.map(tag => tag.tag).join(', '),
       count: data.links.length
       }));
+      console.log(data.links);
+      console.log(tagArray);
 
-      displayImages(data.links, tagArray);
+      //displayImages(data.links, tagArray);
   });
   }
 
@@ -461,11 +463,12 @@ function loadTestDataWithTag() {
 
       // Add event listener to the "Delete Image" button
       deleteButton.addEventListener("click", () => {
+        const url = image.url;
         const jsonObject = JSON.stringify({
-        "url": links[index].split('?')[0]
-      });
+          "url": url.split('?')[0]
+        });
 
-      console.log(jsonObject);
+      //console.log(jsonObject);
 
 
       const apiUrl = "https://rhnlx9ogtj.execute-api.us-east-1.amazonaws.com/pd/deleteimage";
@@ -482,15 +485,9 @@ function loadTestDataWithTag() {
         console.log(data);
         const jsonString = JSON.stringify(data, null, 2);
           if (jsonString.includes("Image successfully deleted")) {
-              // Find the index of the link in the links array
-              const index = links.indexOf(link);
-
-              // Remove the link and tag from their arrays
-              links.splice(index, 1);
-              tagArray.splice(index, 1);
-
-              // Redraw the images
-              displayImages(links, tagArray);
+              //display new images list
+              images = images.filter(image => image.url !== url);
+              displayImages(images);
           } else {
               console.error('Failed to delete image:', data);
           }

@@ -1,0 +1,40 @@
+/* Image container style */
+.image-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-bottom: 1em;
+  }
+
+  /* Image style */
+  .image-container img {
+    width: 150px;
+    height: 150px;
+  }
+
+  /* URL and tag style */
+  .image-details {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    margin-left: 1em;
+    width: 50%;
+  }
+
+  /* Button style */
+  .button {
+    background-color: #4CAF50;
+    border: none;
+    color: white;
+    padding: 10px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 14px;
+    margin-left: 1em;
+    cursor: pointer;
+  }
+
+  .button:hover {
+    background-color: #3e8e41;
+  }

@@ -4,13 +4,13 @@
 <head>
     <title>Main Page</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    
+    <link rel="stylesheet" type="text/css" href="css/styles.css">
 </head>
 
 <body>
 <h1>Welcome!</h1>
 <a href="query.html">Go to query page</a> <br>
-
+<button class="getallimages">get all images</button>
 
 <div class="upload">
     <h2>Upload Image</h2>
@@ -50,13 +50,31 @@
     </form>
     <div id="image_result"></div>
     
+<!-- Images list will be appended here -->
+<div>
+    <h1>Image List</h1>
+  
+    <!-- Test with tag button -->
+    <button class="button" onclick="loadTestDataWithTag()">Test with tag</button>
+  
+    <!-- Test without tag button -->
+    <button class="button" onclick="loadTestDataWithoutTag()">Test without tag</button>
+  
+    <div id="image-list"></div>
+
+</div>
+
 <h1>All Images</h1>
 <div class="image-container" id="imageContainer">
     <!-- Images will be appended here -->
 </div>
 
+
+
+
 <script src="javascript/js.js"></script>
 </body>
+
 
 
 

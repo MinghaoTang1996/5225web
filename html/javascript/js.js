@@ -438,7 +438,7 @@ function loadTestDataWithTag() {
         console.log(jsonObject);
       
         // Send the JSON object to the API endpoint
-        const apiUrl = "https://rhnlx9ogtj.execute-api.us-east-1.amazonaws.com/pd/munualchangetag";
+        const apiUrl = "https://rhnlx9ogtj.execute-api.us-east-1.amazonaws.com/pd/manualchangetag";
         fetch(apiUrl, {
             method: 'POST',
             headers: {
@@ -452,17 +452,8 @@ function loadTestDataWithTag() {
           console.log(data);
           const jsonString = JSON.stringify(data, null, 2);
             if (jsonString.includes("Tags updated successfully")) {
-                // Filter the images array to update the tags for the selected image
-                outputJSON.images = outputJSON.images.map(img => {
-                  if (img.url === url) {
-                    return { url, tags: tags.map(tag => ({tag, count: tagArray.length})) };
-                  } else {
-                    return img;
-                  }
-                });
-      
-                // Redraw the images
-                displayImages(outputJSON.images);
+              //images = images.filter(image => image.url !== url);
+              displayImages(images);
             } else {
                 console.error('Failed to update image:', data);
             }

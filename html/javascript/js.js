@@ -4,7 +4,6 @@ const idToken = new URLSearchParams(hashFragment).get('id_token');
 const user_id = decodeIdToken(idToken).sub;
 console.log(user_id);
 
-
 // Check if the user is logged in
 document.getElementById('logoutButton').onclick = function() {
     // Clear user login data
@@ -110,7 +109,6 @@ window.onload = function() {
     })
     .catch(error => console.error('Error:', error));
 };
-
 
 
 

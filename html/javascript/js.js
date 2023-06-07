@@ -251,48 +251,7 @@ async function findimageByimage(event) {
 
 }
 
-// Define a separate function to fetch responseJSON
-function processResponseJSON(responseJSON) {
-  let links, tags;
-  if (typeof responseJSON === 'string' || responseJSON instanceof String) {
-    // If responseJSON is a URL, make a new fetch call
-    fetch(responseJSON)
-      .then(response => response.json())
-      .then(data => {
-        let tagArray = data.links.map(link => ({
-          tag: data.tags[0],
-          count: 1
-        }));
 
-        displayImages(data.links, tagArray);
-      })
-      .catch(error => console.error('Error:', error));
-  } 
-  // If responseJSON has "images" property
-  else if (Array.isArray(responseJSON.images)) {
-    // If responseJSON has "images" property
-    links = responseJSON.images.map(img => img.url);
-    tags = responseJSON.images.flatMap(img => 
-      img.tags.map(tag => ({
-        tag: tag.tag,
-        count: tag.count
-      }))
-    );
-    displayImages(links, tags);
-  }
-  
-  else {
-    // If responseJSON is already a JSON object, use it directly
-    let tagArray = responseJSON.links.map(link => ({
-      tag: responseJSON.tags[0],
-      count: 1
-    })
-    
-    );
-    //console.log(responseJSON.links);
-    displayImages(responseJSON.links, tagArray);
-  }
-}
 
 
 function formatJSON(responseJSON) {
@@ -314,44 +273,6 @@ function formatJSON(responseJSON) {
   };
   return outputJSON;
 }
-
-
-
-// Function to load the test JSON data with tag
-function loadTestDataWithTag() {
-  //testdisplay();
-
-  fetch("./test_json/test_withtag.json")
-      .then(response => response.json())
-      .then(data => {
-      var outputJSON = formatJSON(data);
-      displayImages(outputJSON.images);
-      });
-
-      
-  }
-
-  
-  // Function to load the test JSON data without tag
-  function loadTestDataWithoutTag() {
-  Promise.all([
-      fetch("test_json/test_notag.json").then(response => response.json()),
-      fetch("test_json/test_tag.json").then(response => response.json())
-  ])
-  .then(([data, tags]) => {
-      // Use the tags array from 'test_tag.json'
-      let tagArray = data.links.map(link => ({
-      tag: tags.tags.map(tag => tag.tag).join(', '),
-      count: data.links.length
-      }));
-      console.log(data.links);
-      console.log(tagArray);
-
-      //displayImages(data.links, tagArray);
-  });
-  }
-
-
 
 
   // Function to edit the tag for an image
@@ -415,13 +336,15 @@ function loadTestDataWithTag() {
       editButton.addEventListener("click", () => {
         const url = image.url;
         const tagArray = image.tags;
+        
       
         // Determine the existing tags and their counts
         const tagCounts = tagArray.reduce((acc, curr) => {
           acc[curr.tag] = curr.count;
           return acc;
         }, {});
-      
+        
+
         // Create the tag edit interface and display it in a modal window
         const modalBackground = document.createElement("div");
         modalBackground.className = "modal-background";
@@ -430,7 +353,8 @@ function loadTestDataWithTag() {
             closeModal();
           }
         });
-      
+        
+        
         const modalDiv = document.createElement("div");
         modalDiv.className = "modal";
         modalDiv.innerHTML = `
@@ -682,34 +606,6 @@ function loadTestDataWithTag() {
 document.querySelector('#form').addEventListener('submit', uploadImage);
 document.querySelector('#image_form').addEventListener('submit', findimageByimage);
 
-function testdisplay(){
-  const processedJSON = {
-    "images": [
-      {
-        "url": "https://media.vanityfair.com/photos/55ba400ffff2c16856a7656b/master/w_2580%2Cc_limit/ibdl-taylor-swift-best-concert-fashion-03-01.jpg",
-        "tags": [
-          {
-            "count": 1,
-            "tag": "cup"
-          }
-        ]
-      },
-      {
-        "url": "https://media.vanityfair.com/photos/55ba4014fff2c16856a76597/master/w_2580%2Cc_limit/ibdl-taylor-swift-best-concert-fashion-04.jpg",
-        "tags": [
-          {
-            "count": 1,
-            "tag": "cup"
-          }
-        ]
-      }
-    ]
-  };
-  console.log(processedJSON);
-  console.log(processedJSON.images);
-  displayImages(processedJSON.images);
-  
-}
 
 
 

@@ -230,18 +230,18 @@ async function findimageByimage(event) {
             console.log(responseJSON);
             const tags = data.tags;
             const links = data.links;
-            let result = "<h2>Tags:</h2><ul>";
+            // let result = "<h2>Tags:</h2><ul>";
 
-            for (let i = 0; i < tags.length; i++) {
-                result += "<li>" + tags[i] + "</li>";
-            }
-            result += "</ul><h2>Images:</h2><ul>";
+            // for (let i = 0; i < tags.length; i++) {
+            //     result += "<li>" + tags[i] + "</li>";
+            // }
+            // result += "</ul><h2>Images:</h2><ul>";
 
-            for (let i = 0; i < links.length; i++) {
-                result += "<li><a href='" + links[i] + "'>" + links[i] + "</a></li>";
-            }
-            result += "</ul>";
-            document.getElementById('image_result').innerHTML = result;
+            // for (let i = 0; i < links.length; i++) {
+            //     result += "<li><a href='" + links[i] + "'>" + links[i] + "</a></li>";
+            // }
+            // result += "</ul>";
+            // document.getElementById('image_result').innerHTML = result;
             console.log(result);
             //processResponseJSON(responseJSON);
             var outputJSON = formatJSON(responseJSON);

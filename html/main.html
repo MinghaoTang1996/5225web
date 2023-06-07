@@ -5,68 +5,33 @@
     <title>Main Page</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <link rel="stylesheet" type="text/css" href="css/styles.css">
-    <style>
-        .tab-container {
-            width: 100%;
-            overflow: hidden;
-        }
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
 
-        .tab-button {
-            background-color: #f1f1f1;
-            border: none;
-            outline: none;
-            cursor: pointer;
-            padding: 10px 20px;
-            font-size: 16px;
-            transition: background-color 0.3s ease;
-        }
-
-        .tab-button:hover {
-            background-color: #ddd;
-        }
-
-        .tab-button.active {
-            background-color: #ccc;
-        }
-
-        .tab-content {
-            display: none;
-            padding: 20px;
-        }
-    </style>
 </head>
 
 <body>
-<h1>Welcome!</h1>
+<h1 class="text-center mt-5 text-light pb-5 pt-5" id="title">Welcome!</h1>
 <div style="position: absolute; top: 10px; right: 10px;">
-    <button id="logoutButton">Logout</button>
+    <button id="logoutButton" class="btn ">Logout</button>
 </div>
 
 <div class="tab-container">
     <div class="tab-header">
         <!-- <button class="tab-button active" onclick="openTab(event, 'showAllImages')">All Images</button> -->
-        <button class="tab-button" onclick="openTab(event, 'uploadImage')">Upload Image</button>
-        <button class="tab-button" onclick="openTab(event, 'findTag')">Find Tag</button>
-        <button class="tab-button" onclick="openTab(event, 'findImg')">Find Images by Image</button>
+        <button class="tab-button btn btn-primary" onclick="openTab(event, 'uploadImage')">Upload Image</button>
+        <button class="tab-button btn btn-primary" onclick="openTab(event, 'findTag')">Find Tag</button>
+        <button class="tab-button btn btn-primary" onclick="openTab(event, 'findImg')">Find Images by Image</button>
 
-
-    </div>
-
-    <div class="tab-content" id="showAllImages">
-        <h1>All Images</h1>
-        <div class="image-container" id="imageContainer">
-            <!-- Images will be appended here -->
-        </div>
 
     </div>
 
     <div class="tab-content" id="uploadImage">
         <div class="upload">
             <h2>Upload Image</h2>
-            <form id="form">
-                <label for="file">Image File:</label><br>
-                <input type="file" id="file" name="file" required><br>
-                <input type="submit" value="Upload Image">
+            <form id="form" class="m-3">
+                <label for="file" class="mb-3 ">Image File:</label><br>
+                <input type="file" id="file" name="file"  class="mb-3 " required><br>
+                <input type="submit" class="mb-3" value="Upload Image">
             </form>
             <div id="result"></div>
         </div>
@@ -74,20 +39,20 @@
     </div>
 
     <div class="tab-content" id="findTag">
-        <h1>AUTOMATED OBJECT DETECTION TAGGING AND QUERY HANDLING SYSTEM</h1>
+        <h1>Find Tag</h1>
         <div class="search-form">
             <form id="tagsForm">
-                <div id="tagInputs">
-                    <div class="tagInput">
+                <div id="tagInputs " class="mb-3">
+                    <div class="tagInput ">
                         <input type="text" class="tag" placeholder="Enter tag">
                         <button class="decreaseCount">-</button>
                         <span class="count">1</span>
                         <button class="increaseCount">+</button>
                     </div>
                 </div>
-                <button type="submit">Search</button>
+                <button type="submit " class="mb-3">Search</button>
             </form>
-            <button id="addTag">Add Tag</button>
+            <button id="addTag" class="mb-3">Add Tag</button>
         </div>
         <div class="search-results" id="searchResults">
             <!-- Search results will be appended here -->
@@ -98,9 +63,9 @@
     <div class="tab-content" id="findImg">
         <h1>Find Images Based on Image</h1>
         <form id="image_form">
-            <label for="findByImage_image">Image File:</label><br>
-            <input type="file" id="findByImage_image" name="image"><br>
-            <input type="submit" value="Find Images">
+            <label for="findByImage_image"  class="mb-3">Image File:</label><br>
+            <input type="file" id="findByImage_image"  class="mb-3"name="image"><br>
+            <input type="submit"  class="mb-3" value="Find Images">
         </form>
         <div id="image_result">
 
@@ -113,10 +78,10 @@
 
 </div>
 
-<div>
+<div class="shadow-lg p-3 bg-body-tertiary rounded-3 mt-5 ms-3 me-3">
     <h1>Image List</h1>
 
-    <div id="image-list"></div>
+    <div id="image-list" class="  p-3"></div>
 </div>
 
 

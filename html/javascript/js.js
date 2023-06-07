@@ -4,6 +4,7 @@ const idToken = new URLSearchParams(hashFragment).get('id_token');
 const user_id = decodeIdToken(idToken).sub;
 console.log(user_id);
 
+
 // Check if the user is logged in
 document.getElementById('logoutButton').onclick = function() {
     // Clear user login data
@@ -63,6 +64,7 @@ function decodeIdToken(token) {
 
     return JSON.parse(jsonPayload);
 }
+
 // Define variables to hold the JSON request and response
 var requestJSON = null;
 var responseJSON = null;
@@ -108,6 +110,7 @@ window.onload = function() {
     })
     .catch(error => console.error('Error:', error));
 };
+
 
 
 
